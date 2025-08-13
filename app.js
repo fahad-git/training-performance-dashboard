@@ -1,3 +1,6 @@
+// Load environment variables
+require('dotenv').config();
+
 var createError = require('http-errors');
 var express = require('express');
 var cookieParser = require('cookie-parser');
@@ -5,6 +8,7 @@ var logger = require('morgan');
 const cors = require('cors');
 const { specs, swaggerUi } = require('./swagger/apiDocs');
 var insightsRoutes = require('./routes/insightsRoutes');
+var naturalLanguageInsightsRoutes = require('./routes/naturalLanguageInsightsRoutes');
 
 var app = express();
 
@@ -32,6 +36,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
  * Insights router (versioned)
  */
 app.use('/api/v1/insights', insightsRoutes)
+
+/**
+ * Natural Language Insights router (versioned)
+ */
+app.use('/api/v1/natural-language-insights', naturalLanguageInsightsRoutes)
 
 
 /**
