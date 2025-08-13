@@ -49,6 +49,27 @@ training-performance-dashboard/
 - **Error Handling**: HTTP-errors
 - **Development**: Jest, Nodemon, Supertest
 
+## Screenshots
+<img width="1800" height="1036" alt="b-ss-01" src="https://github.com/user-attachments/assets/f48b6f1f-0f2f-4ef4-9198-c227dbc57baa" />
+
+---
+
+<img width="1788" height="939" alt="b-ss-02" src="https://github.com/user-attachments/assets/ff3c2311-41fc-475f-b9de-4415ffa48f17" />
+
+---
+
+<img width="1800" height="1031" alt="b-ss-03" src="https://github.com/user-attachments/assets/d37a20aa-4d47-4907-9e6e-f84e37eac92e" />
+
+---
+
+<img width="1800" height="909" alt="b-ss-04" src="https://github.com/user-attachments/assets/73524596-8558-48ad-a897-1bc2c92616b2" />
+
+---
+
+<img width="1800" height="1031" alt="b-ss-05" src="https://github.com/user-attachments/assets/92e878ed-bef2-4705-81b8-bd30bc0c49a1" />
+
+---
+
 ## Installation and Setup
 
 ### Prerequisites
