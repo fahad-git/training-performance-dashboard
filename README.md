@@ -10,6 +10,7 @@ The dashboard transforms raw training data into actionable business intelligence
 - **🏢 Department Insights**: Detailed breakdown of performance by department with skill-specific metrics
 - **📈 Trend Analysis**: Performance trends over time to identify patterns and improvements
 - **🔍 Flexible Filtering**: Filter data by department and date ranges for targeted analysis
+- **🤖 Natural Language Insights**: AI-powered human-readable insights using OpenAI GPT model
 - **📚 API Documentation**: Complete Swagger/OpenAPI documentation for easy integration
 - **🧪 Testing**: Comprehensive test suite with Jest and Supertest
 - **🚀 RESTful API**: Clean, versioned API endpoints following REST principles
@@ -45,28 +46,23 @@ training-performance-dashboard/
 
 ### Dependencies
 - **Core**: Express, CORS, Morgan, Cookie-parser
+- **AI Integration**: OpenAI (for natural language insights)
 - **Documentation**: Swagger-jsdoc, Swagger-ui-express
 - **Error Handling**: HTTP-errors
+- **Environment**: dotenv
 - **Development**: Jest, Nodemon, Supertest
 
 ## Screenshots
-<img width="1800" height="1036" alt="b-ss-01" src="https://github.com/user-attachments/assets/f48b6f1f-0f2f-4ef4-9198-c227dbc57baa" />
+<img width="1800" height="1037" alt="b-ss-01" src="https://github.com/user-attachments/assets/5447f0bb-313f-4bdf-9d92-69b2c7685e23" />
+
 
 ---
 
-<img width="1788" height="939" alt="b-ss-02" src="https://github.com/user-attachments/assets/ff3c2311-41fc-475f-b9de-4415ffa48f17" />
+<img width="1800" height="1036" alt="b-ss-02" src="https://github.com/user-attachments/assets/22ae6f24-1abd-4ced-8958-06393cfb07eb" />
 
 ---
 
-<img width="1800" height="1031" alt="b-ss-03" src="https://github.com/user-attachments/assets/d37a20aa-4d47-4907-9e6e-f84e37eac92e" />
-
----
-
-<img width="1800" height="909" alt="b-ss-04" src="https://github.com/user-attachments/assets/73524596-8558-48ad-a897-1bc2c92616b2" />
-
----
-
-<img width="1800" height="1031" alt="b-ss-05" src="https://github.com/user-attachments/assets/92e878ed-bef2-4705-81b8-bd30bc0c49a1" />
+<img width="1799" height="1037" alt="b-ss-03" src="https://github.com/user-attachments/assets/7f26936a-33a8-4a4e-9711-a0057e5eacb5" />
 
 ---
 
@@ -76,6 +72,7 @@ training-performance-dashboard/
 - **Node.js**: Version 22.9.0 (use [nvm](https://github.com/nvm-sh/nvm) for version management)
 - **Git**: For cloning the repository
 - **Package Manager**: npm or yarn
+- **OpenAI API Key**: Required for natural language insights functionality
 
 ### Quick Start
 
@@ -96,7 +93,17 @@ training-performance-dashboard/
    npm install
    ```
 
-4. **Start the Application**
+4. **Configure Environment Variables**
+   ```bash
+   # Copy the example environment file
+   cp env.example .env
+   
+   # Edit .env and add your OpenAI API key
+   # Get your API key from: https://platform.openai.com/api-keys
+   OPENAI_API_KEY=your_actual_api_key_here
+   ```
+
+5. **Start the Application**
    ```bash
    # Production mode
    npm start
@@ -105,8 +112,9 @@ training-performance-dashboard/
    npm run dev
    ```
 
-5. **Access the Application**
+6. **Access the Application**
    - **API**: http://localhost:8000/api/v1/insights
+   - **Natural Language Insights**: http://localhost:8000/api/v1/natural-language-insights
    - **Documentation**: http://localhost:8000/api-docs
    - **Health Check**: http://localhost:8000/ (redirects to insights)
 
@@ -114,6 +122,9 @@ training-performance-dashboard/
 
 ### GET `/api/v1/insights`
 Retrieves comprehensive training insights with optional filtering.
+
+### GET `/api/v1/natural-language-insights`
+Generates AI-powered natural language insights from training data using OpenAI GPT model.
 
 #### Query Parameters
 - `department` (optional): Filter by department name (case-insensitive)
@@ -133,7 +144,15 @@ curl "http://localhost:8000/api/v1/insights?startDate=2024-01-01&endDate=2024-12
 
 # Combined filters
 curl "http://localhost:8000/api/v1/insights?department=marketing&startDate=2024-06-01&endDate=2024-06-30"
-```
+
+# Natural Language Insights (all data)
+curl http://localhost:8000/api/v1/natural-language-insights
+
+# Natural Language Insights with department filter
+curl "http://localhost:8000/api/v1/natural-language-insights?department=engineering"
+
+# Natural Language Insights with date range
+curl "http://localhost:8000/api/v1/natural-language-insights?startDate=2024-01-01&endDate=2024-12-31"
 
 #### Response Structure
 ```json
@@ -167,6 +186,28 @@ curl "http://localhost:8000/api/v1/insights?department=marketing&startDate=2024-
       "averageScore": 84.5
     }
   ]
+}
+```
+
+#### Natural Language Insights Response Structure
+```json
+{
+  "metadata": {
+    "generatedAt": "2024-01-01T00:00:00Z",
+    "version": "1.0",
+    "filters": {
+      "department": "engineering",
+      "startDate": "2024-01-01",
+      "endDate": "2024-12-31"
+    }
+  },
+  "summary": {
+    "totalSessions": 45,
+    "passRate": 82.1,
+    "averageCompletionTime": 38.5,
+    "overallSkillAverage": 85.2
+  },
+  "naturalLanguageInsights": "The Engineering department shows strong performance with an 82.1% pass rate across 45 training sessions. Communication skills are particularly strong at 88.5%, while problem-solving skills average 87.2%. The department completes training sessions efficiently with an average time of 38.5 minutes, suggesting good engagement and understanding of the material.",
 }
 ```
 
@@ -242,29 +283,6 @@ describe('Training Data - Integration Tests', () => {
 2. **Code Review**: Ensure all tests pass before merging
 3. **Documentation**: Update API docs for new endpoints
 4. **Testing**: Add tests for new functionality
-
-## Design Decisions
-
-### Architecture Patterns
-- **MVC Pattern**: Separation of concerns with controllers, routes, and models
-- **Middleware Architecture**: Clean separation of cross-cutting concerns
-- **Error Handling**: Consistent error responses using RFC 7807 Problem Details
-
-### API Design
-- **RESTful Principles**: Resource-based URL structure
-- **Versioning**: API versioning for backward compatibility
-- **Query Parameters**: Flexible filtering without complex request bodies
-- **Response Format**: Consistent JSON structure with metadata
-
-### Performance Considerations
-- **Single-Pass Processing**: Efficient data aggregation in one iteration
-- **Memory Management**: Minimal memory footprint for large datasets
-- **Async Operations**: Non-blocking I/O for file operations
-
-### Security
-- **Input Validation**: Comprehensive parameter validation
-- **Error Handling**: Safe error messages without information leakage
-- **CORS Configuration**: Configurable cross-origin resource sharing
 
 ## Error Handling
 
@@ -354,6 +372,7 @@ npm install
 ```bash
 PORT=8000                    # Server port (default: 8000)
 NODE_ENV=production          # Environment mode
+OPENAI_API_KEY=sk-...        # OpenAI API key for natural language insights
 ```
 
 ## License
